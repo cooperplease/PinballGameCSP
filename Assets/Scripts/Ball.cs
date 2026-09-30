@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 public class Ball : MonoBehaviour
@@ -12,6 +13,9 @@ public class Ball : MonoBehaviour
     public AudioClip dinkClip;
     public AudioClip bounceClip;
     public AudioClip launchClip;
+    public GameObject multiball;
+    public bool ignoreLock = false;
+    public bool reallyIgnoreLock = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -22,18 +26,28 @@ public class Ball : MonoBehaviour
         audioSource.PlayOneShot(launchClip);
     }
 
+    
+
     private void Update()
     {
-        if (transform.position.y <= -18.73)
+        if (transform.position.y <= -18.7)
         {
-            transform.position = new Vector3(startX,startY,0);
-            rb2d.linearVelocity = new Vector3(0, 0, 0);
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
-                rb2d.AddForce(new Vector3(0,launchForce,0));
-                audioSource.PlayOneShot(launchClip);
-            }
+            
+                transform.position = new Vector3(startX, startY, 0);
+                rb2d.linearVelocity = new Vector3(0, 0, 0);
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    rb2d.AddForce(new Vector3(0, launchForce, 0));
+                    audioSource.PlayOneShot(launchClip);
+                }
+                
         }
+        
+    }
+
+    private void FixedUpdate()
+    {
+        if (rb2d.linearVelocity.magnitude > launchForce) rb2d.linearVelocity = rb2d.linearVelocity.normalized * launchForce;
     }
 
     // Update is called once per frame
@@ -43,5 +57,67 @@ public class Ball : MonoBehaviour
         {
             audioSource.PlayOneShot(dinkClip);
         }else audioSource.PlayOneShot(bounceClip);
+        
+        
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+
+        if (collision.CompareTag("Cathedral") &&  !ignoreLock && reallyIgnoreLock == false)
+        {
+            rb2d.linearVelocity = Vector3.zero;
+            rb2d.angularVelocity = 0f;
+            rb2d.gravityScale = 0f;
+            multiball.GetComponent<Multiball>().MultiballActivate();
+            ignoreLock = true;
+        }
+
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Void"))
+        {
+            if (reallyIgnoreLock)
+            {
+                multiball.GetComponent<Multiball>().MultiballDeactivate(this.gameObject);
+                Destroy(gameObject);
+            }
+            else
+            {
+                transform.position = new Vector3(startX, startY, 0);
+                rb2d.linearVelocity = new Vector3(0, 0, 0);
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    rb2d.AddForce(new Vector3(0, launchForce, 0));
+                    audioSource.PlayOneShot(launchClip);
+                }
+                multiball.GetComponent<Multiball>().IncrementBalls();
+                
+            }
+        }
+    }
+
+    public float getX()
+    {
+        return transform.position.x;
+    }
+
+    public float getY()
+    {
+        return transform.position.y;
+    }
+
+    public void IgnoreLock()
+    {
+        ignoreLock = false;
+        reallyIgnoreLock = true;
+        rb2d.gravityScale = 2.5f;
+    }
+
+    public void SetMultiball(GameObject multiball)
+    {
+        this.multiball = multiball;
     }
 }

@@ -3,13 +3,16 @@ using UnityEngine;
 
 public class ScoreUI : MonoBehaviour
 {
-    public static ScoreUI instance {get; private set;}
+    public static ScoreUI Instance;
     
-    [SerializeField] private TMP_Text scoreText;
+    public TMP_Text scoreText;
     private int currentScore = 0;
 
-   
-    
+
+    void Awake()
+    {
+        Instance = this;
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -24,5 +27,10 @@ public class ScoreUI : MonoBehaviour
         {
             currentScore++;
         }
+    }
+
+    public void ScoreIncrease(int num)
+    {
+        currentScore += num;
     }
 }

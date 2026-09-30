@@ -11,7 +11,7 @@ public class Bumper_Right : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.D))
         {

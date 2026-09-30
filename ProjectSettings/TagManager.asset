@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Void
   - Bumper
+  - Cathedral
   layers:
   - Default
   - TransparentFX

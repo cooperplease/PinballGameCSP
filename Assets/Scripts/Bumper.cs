@@ -14,7 +14,7 @@ public class Bumper : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         
         if (Input.GetKey(KeyCode.A))
@@ -22,4 +22,6 @@ public class Bumper : MonoBehaviour
             rb2d.AddTorque(torque,  ForceMode2D.Force);
         }else rb2d.AddTorque(-torque,  ForceMode2D.Force);
     }
+    
+    
 }
