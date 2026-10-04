@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Ball : MonoBehaviour
 {
@@ -30,18 +31,7 @@ public class Ball : MonoBehaviour
 
     private void Update()
     {
-        if (transform.position.y <= -18.7)
-        {
-            
-                transform.position = new Vector3(startX, startY, 0);
-                rb2d.linearVelocity = new Vector3(0, 0, 0);
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    rb2d.AddForce(new Vector3(0, launchForce, 0));
-                    audioSource.PlayOneShot(launchClip);
-                }
-                
-        }
+        
         
     }
 
@@ -73,6 +63,17 @@ public class Ball : MonoBehaviour
             ignoreLock = true;
         }
 
+        if (collision.CompareTag("Launcher"))
+        {
+            transform.position = new Vector3(startX, startY, 0);
+            rb2d.linearVelocity = new Vector3(0, 0, 0);
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                rb2d.AddForce(new Vector3(0, launchForce, 0));
+                audioSource.PlayOneShot(launchClip);
+            }
+        }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -86,18 +87,26 @@ public class Ball : MonoBehaviour
             }
             else
             {
-                transform.position = new Vector3(startX, startY, 0);
-                rb2d.linearVelocity = new Vector3(0, 0, 0);
-                if (Input.GetKeyDown(KeyCode.Return))
+                if (multiball.GetComponent<Multiball>().GetBallCount() < 4)
                 {
-                    rb2d.AddForce(new Vector3(0, launchForce, 0));
-                    audioSource.PlayOneShot(launchClip);
-                }
-                multiball.GetComponent<Multiball>().IncrementBalls();
-                
+                    BallUI.Instance.BallIncrement();
+                    transform.position = new Vector3(startX, startY, 0);
+                    rb2d.linearVelocity = new Vector3(0, 0, 0);
+                    if (Input.GetKeyDown(KeyCode.Return))
+                    {
+                        rb2d.AddForce(new Vector3(0, launchForce, 0));
+                        audioSource.PlayOneShot(launchClip);
+                    }
+
+                    multiball.GetComponent<Multiball>().IncrementBalls();
+                    Debug.Log(multiball.GetComponent<Multiball>().GetBallCount());
+                }else SceneManager.LoadScene("Lose");
+
             }
         }
     }
+
+    
 
     public float getX()
     {

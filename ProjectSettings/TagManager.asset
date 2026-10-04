@@ -7,6 +7,7 @@ TagManager:
   - Void
   - Bumper
   - Cathedral
+  - Launcher
   layers:
   - Default
   - TransparentFX

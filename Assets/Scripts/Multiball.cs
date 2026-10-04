@@ -9,7 +9,7 @@ public class Multiball : MonoBehaviour
     public float startY;
     [SerializeField] GameObject ballPrefab;
     private ArrayList ballList = new ArrayList();
-    private int ballCount = 1;
+    private int ballCount =2;
 
     private bool isMultipleBalls = false;
     //private Vector3 spawnPos = new Vector3(startX, startY, 0);
@@ -39,10 +39,7 @@ public class Multiball : MonoBehaviour
             }
         }
 
-        if (ballCount >= 4)
-        {
-            
-        }
+        
     }
 
     public void MultiballActivate()
@@ -81,6 +78,11 @@ public class Multiball : MonoBehaviour
         ballCount++;
         Debug.Log(ballCount);
     }
-    
-    
+
+    public int GetBallCount()
+    {
+        return ballCount;
+    }
+
+
 }
